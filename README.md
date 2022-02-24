@@ -49,8 +49,9 @@ Can it be generalized?
         - Pre-trained models:
           - (local) [FaceBook's bart-large-mnli](https://huggingface.co/facebook/bart-large-mnli)
           - (web-app server) [Valhalla's distilbart-mnli-12-3](https://huggingface.co/valhalla/distilbart-mnli-12-3)
+            - reduced version of FaceBook's bart-large-mnli model that the StreamLit server can handle
 
-**Data Cleaning:**
+**Data Wrangling:**
 <br>The feature 'selftext' was the only one that had missing values. This was due to the post being an image-only post without any text. Removing these posts was not the option as the title of the posts still contained useful information. Therefore, all null posts along with all posts that only had "[deleted]" or "[removed]" were filled with a blank space.
 <br>Since the title also contained useful information, a new column called 'text' was created as a combination and replacement of the 'title' and 'selftext' features
 <br>The 'subreddit' feature contained 'pcgaming' or 'console' -- therefore, was handled with label-encoding:
@@ -61,95 +62,31 @@ Can it be generalized?
 **Data Dictionary:**
 |Feature|Dataset|Description|
 |:---|:---|:---|
-|subreddit|submissions_clean.csv|The subreddit that the post belongs to (0 = r/consoles, 1 = r/pcgaming)|
-|text|submissions_clean.csv|The consolidated text of the title and contents of the post.|
+|positive|all variations of "train.csv"|The sentiment classification of the movie review (1 = positive, 0 = negative)|
+|text|all variations of "train.csv"|Individual movie reviews some IMBD|
 
 **EDA:**
-<br>With the use of Count Vectorization on the consolidated text, the initial look at the top 20 features indicated that there were many commonly shared words between both subreddits & that there were URL elements that needed to be omitted.
-<br>This resulted in additional text cleaning to remove all URL elements, remove non-letter characters, and lower-case everything.
-<br>Upon a second look at the top 20 words after the text cleaning, additional commonly shared words were discovered. Therefore, a custom stop words list that included the commonly shared words was created.
-<br>Here's a visual look at the top 20 words from each subreddit:
-![top20console](images/top20_console.png "Top 20 words in r/consoles")
-![top20pc](images/top20_pc.png "Top 20 words in r/pcgaming")
+<br>Using Count Vectorization on the consolidated reviews,here's a visual look at the top 30 words from each sentiment:
+![top30positive](images/postive30.png "Most frequent words in positive reviews")
+![top30negative](images/negative30.png "Most frequent words in negative reviews")
 
 **Modeling:**
-<br>In order to select the best model for training, the 5-fold cross validation scores all 14 combinations of 7 models + 2 vectorizers (Count and TF-IDF) were compared:
-- Logistic Regression
-- KNN
-- BernoulliNB
-- MultinomialNB
-- Random Forest Classifier
-- SVC (Support Vector Classifier)
-- AdaBoost Classifer
+1. For the conventional models, the best model for training was selected based on the 5-fold cross validation scores all 14 combinations of 7 models + 2 vectorizers (Count and TF-IDF):
+  - **Logistic Regression** (highest accuracy & roc_auc)
+  - KNN
+  - BernoulliNB
+  - MultinomialNB
+  - Random Forest
+  - AdaBoost
+  - XGBoost
+2. Through trial and error while considering computational & memory efficiency, a CNN model was developed to attain stronger metrics than the non-neural models
+3. To confirm effectiveness, a pre-trained transformer neural network called BART (bidirectional autoregressive transformer) was also used.
 
-The top models considered for hyperparameter tuning were:
-1. Logistic Regression
-2. Random Forest Classifier
-3. SVC
-4. AdaBoost Classifier
+**Evaluation Results:**
+- INSERT TABLE RESULT SCREENSHOTS HERE
 
-**Table of scores of tuned models:**
-|  | Count Vectorizer | TD-IDF Vectorizer |
-|---|---:|---:|
-| **Logistic Regression** | Training: 0.98154<br>Testing: 0.90713<br>ROC_AUC: 0.88226 | Training: 0.90812<br>Testing:0.89746<br>ROC_AUC: 0.87036 |
-| **Random Forest Classifier** | Training: 0.99661<br>Testing: 0.89443<br>ROC_AUC: 0.87812 | Training: 0.99633<br>Testing: 0.90169<br>ROC_AUC: 0.88252 |
-| **Support Vector Classifier** | Training: 0.97728<br>Testing: 0.90371<br>ROC_AUC: 0.87972 | Training: 0.98373<br>Testing: 0.91156<br>ROC_AUC: 0.89170 |
-| **Ada Boost Classifier** | Training: 0.90534<br>Testing: 0.89705<br>ROC_AUC: 0.86792 | Training: 0.90703<br>Testing: 0.89142<br>ROC_AUC: 0.86241 |
-
-*NOTE: This table is the simplified version without the best parameters. Please refer to [eda_and_modeling.ipynb](https://git.generalassemb.ly/kluu/project-3/blob/master/code/eda_and_modeling.ipynb) for the table with tuned parameters.*
-
-**Through tuning, the best 2 models are:**
-1. **AdaBoost Classifier with Count Vectorization (lowest variance)**
-- Training: 0.90534
-- Testing: 0.89705
-- ROC_AUC: 0.86792
-
-
-- Parameters:
-    - stop_words = 'english'
-    - ngram_range = (1,2)
-    - DecisionTreeClassifier(max_depth=1)
-    - n_estimators = 200
-    - learning_rate = 0.5
-
-
-2. **SVC with TF-IDF Vectorization (highest ROC_AUC score + lowest bias)**
-- Training: 0.98373
-- Testing: 0.91156
-- ROC_AUC: 0.89170
-
-
-- Parameters:
-    - stop_words = stops (custom, extending English list)
-    - ngram_range = (1,2)
-    - kernel = sigmoid
-    - gamma = 0.1
-    - C = 10
-
-
-Some additional tuning was performed and it turns out that there was another SVC model that performed slightly better:
-<br>**Support Vector Classifier with TF-IDF Vectorizer**
-- Training: 0.98373
-- Testing: 0.91156
-- ROC_AUC: 0.89170
-
-
-- Parameters:
-    - kernal='linear'
-    - C=1
-    - gamma=1
-
-**Feature importance:**
-<br>While looking at the feature importances of each of the top 2 models, depending on the stop word treatment, different words and combinations of words had an impact on the models performance:
-1. AdaBoost + Count
-- many combinations of games + "word" had an impact on the models performance in predicting the PC Gaming subreddit.
-    - this was to be expected the model was tuned to only remove the original 'English' stop words instead of the custom one
-
-
-2. SVC + TF-IDF
-- more distinctive single words have a heavier level of importance (along with some two word combinations that consist of the listed single words)
-    - since the custom stop words list was used for removal, we no longer see combinations of "games" + "words" compared to the previous list
-
+**Model Parameters:**
+- 
 
 ### CONCLUSION
 To achieve the goal of correctly predicting whether a post belongs to subreddit r/pcgaming or r/consoles, one of the two models can be utilized:
