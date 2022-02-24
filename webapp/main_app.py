@@ -67,7 +67,7 @@ def cleaner(text):
 
 @st.cache(allow_output_mutation=True)
 def load_tokenizer():
-	with open('https://github.com/L-Kevin/sentiment_analysis/blob/main/webapp/cnn_tokenizer.pickle?raw=true', 'rb') as handle:
+	with open('webapp/cnn_tokenizer.pickle', 'rb') as handle:
 		tokenizer = pickle.load(handle)
 	return tokenizer
 
@@ -76,9 +76,9 @@ def load_tokenizer():
 def pre_model():
 	
 	# Download pre-trained neural network if does not exist in folder
-	save_dest = Path('https://github.com/L-Kevin/sentiment_analysis/tree/main/webapp')
+	save_dest = Path('webapp/')
 	save_dest.mkdir(exist_ok=True)
-	model_file = Path("https://github.com/L-Kevin/sentiment_analysis/blob/main/webapp/sentiment_model.hdf5?raw=true")
+	model_file = Path("webapp/sentiment_model.hdf5")
 	
 	if not model_file.exists():
 		with st.spinner("Downloading model... this may take awhile! \n Don't close or refresh!"):
@@ -178,7 +178,7 @@ elif page == 'In-Depth Analyzer':
 	st.markdown("Upload your collection of reviews to analyze. _The reviews must be stored into a .csv file under a single column named 'text.'_")
 	
 	# Sample dataset
-	sample_review = pd.read_csv('https://github.com/L-Kevin/sentiment_analysis/blob/main/webapp/movie_review_sample.csv?raw=true')
+	sample_review = pd.read_csv('webapp/movie_review_sample.csv')
 	st.download_button("Sample review dataset",
 				data=sample_review.to_csv(index=False).encode('utf-8'),
 				file_name='movie_review_sample.csv',
