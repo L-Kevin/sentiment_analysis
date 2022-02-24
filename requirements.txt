@@ -6,6 +6,5 @@ plotly
 stqdm
 bs4
 pathlib
-pickle
 tensorflow
 transformers
