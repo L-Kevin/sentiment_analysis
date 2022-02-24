@@ -67,7 +67,7 @@ def cleaner(text):
 
 @st.cache(allow_output_mutation=True)
 def load_tokenizer():
-	with open('cnn_tokenizer.pickle', 'rb') as handle:
+	with open('https://raw.githubusercontent.com/L-Kevin/sentiment_analysis/main/cnn_tokenizer.pickle', 'rb') as handle:
 		tokenizer = pickle.load(handle)
 	return tokenizer
 
