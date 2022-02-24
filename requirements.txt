@@ -5,6 +5,7 @@ matplotlib
 plotly
 stqdm
 bs4
+lxml
 pathlib
 tensorflow
 transformers
