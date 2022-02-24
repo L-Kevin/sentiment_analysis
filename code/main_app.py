@@ -67,7 +67,7 @@ def cleaner(text):
 
 @st.cache(allow_output_mutation=True)
 def load_tokenizer():
-	with open('tokenizer/cnn_tokenizer.pickle', 'rb') as handle:
+	with open('./tokenizer/cnn_tokenizer.pickle', 'rb') as handle:
 		tokenizer = pickle.load(handle)
 	return tokenizer
 
@@ -78,7 +78,7 @@ def pre_model():
 	# Download pre-trained neural network if does not exist in folder
 	save_dest = Path('model')
 	save_dest.mkdir(exist_ok=True)
-	model_file = Path("model/sentiment_model.hdf5")
+	model_file = Path("./model/sentiment_model.hdf5")
 	
 	if not model_file.exists():
 		with st.spinner("Downloading model... this may take awhile! \n Don't close or refresh!"):
