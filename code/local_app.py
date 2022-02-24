@@ -233,12 +233,11 @@ elif page == 'In-Depth Analyzer':
 		st.header("Sentiment Distribution")
 		
 		if sample_size == 'Please select':
-			df2 = pd.DataFrame()
-			st.write()
+			st.error('Please select a sample size.')
 		elif (sample_size == 'ALL') or (sample_size >= len(df)):
 			df2 = df.copy()		
 		elif type(sample_size) == int:
-			df2 = df.sample(n=5, ignore_index=True)
+			df2 = df.sample(n=sample_size, ignore_index=True)
 			
 		if len(df2) > 0:
 			with st.spinner('Analyzing sentiment...'):
