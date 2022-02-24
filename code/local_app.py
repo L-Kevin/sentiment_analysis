@@ -126,7 +126,8 @@ def load_bart():
 		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
-	# PROBLEM, most streamlit apps crash when utilizing torch (pytorch) dependencies -- gigabytes in size
+	# PROBLEM, most streamlit apps crash when utilizing torch (pytorch) dependencies
+		# ("facebook/bart-large-mnli") is gigabytes in size
 		# https://discuss.streamlit.io/t/getting-error-manager-error-checking-streamlit-healthz-get-http-localhost-8501-healthz/8882/2
 		# My delployed app also encounted this issue 
 			# "[manager] The service has encountered an error while checking the health of the Streamlit app"
