@@ -68,7 +68,7 @@ def cleaner(text):
 @st.cache(allow_output_mutation=True)
 def load_tokenizer():
 	with open('webapp/cnn_tokenizer.pickle', 'rb') as handle:
-		tokenizer = pickle.load(handle)
+		tokenizer = pickle.load(handle, protocol=pickle.HIGHEST_PROTOCOL)
 	return tokenizer
 
 
