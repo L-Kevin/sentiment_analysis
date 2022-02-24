@@ -21,6 +21,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 
+import pytorch
 import transformers
 from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
 
