@@ -4,7 +4,6 @@ numpy
 matplotlib
 plotly
 stqdm
-re
 bs4
 pathlib
 pickle
