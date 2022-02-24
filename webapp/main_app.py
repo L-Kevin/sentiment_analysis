@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
@@ -9,12 +10,12 @@ from plotly.subplots import make_subplots
 
 from stqdm import stqdm # https://discuss.streamlit.io/t/stqdm-a-tqdm-like-progress-bar-for-streamlit/10097
 
-import matplotlib.pyplot as plt
 import os
 import re
 from bs4 import BeautifulSoup
 from pathlib import Path
 import pickle
+
 import tensorflow
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -117,11 +118,10 @@ def length(user_input):
 
 @st.cache(allow_output_mutation=True)
 def load_bart():
-	# Download pipeline BART model
-	model = AutoModelForSequenceClassification.from_pretrained("facebook/bart-large-mnli")
-	tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-mnli")
-	
+	# Download pipeline BART model	
 	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
+		model = AutoModelForSequenceClassification.from_pretrained("facebook/bart-large-mnli")
+		tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-mnli")
 		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
