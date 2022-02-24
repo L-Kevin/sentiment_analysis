@@ -74,11 +74,12 @@ def load_tokenizer():
 
 @st.cache(allow_output_mutation=True)
 def pre_model():
-
+	
+	# Download pre-trained neural network if does not exist in folder
 	save_dest = Path('model')
 	save_dest.mkdir(exist_ok=True)
 	model_file = Path("model/sentiment_model.hdf5")
-
+	
 	if not model_file.exists():
 		with st.spinner("Downloading model... this may take awhile! \n Don't close or refresh!"):
 			cloud_id = '1Nuc9NEX-CvGMe2w5TG_LrHTcipIWTIGs'
@@ -88,6 +89,7 @@ def pre_model():
 	model = load_model(model_file)
 	return model
 
+# Predict sentiment (limited to positive/negative)
 def predict(user_input):
 	cleaned_input = cleaner(user_input)
 	padded = pad_sequences(tokenizer.texts_to_sequences([cleaned_input]), 300)
@@ -98,10 +100,10 @@ def predict(user_input):
 	
 	if pred > 0.7:
 		st.write('Conclusion: POSITIVE EXPERIENCE')
-		st.write("This client has experience an overall positive. Continue to deliver similar products and/or solutions that align with the positives in this review.")
+		st.write("This client has experience an overall positive. Continue to deliver similar products and/or solutions that align with the positives in this review. Try out our in-depth analyzer to further understand your client experiences.")
 	elif pred > 0.3:
 		st.write('Conclusion: NEUTRAL EXPERIENCE')
-		st.write("Although this is not a negative experience, let's discuss about this experience to understand the areas of improvements. Please refer to our consultants at improvements@bestservice.ca. We would like to propose ")		
+		st.write("Although this is not a negative experience, let's discuss about this experience to understand the areas of improvements. Please refer to our consultants at improvements@bestservice.ca. We would like to work with you in developing the best solutions to achieve positive results.")		
 	else:
 		st.write('Conclusion: NEGATIVE EXPERIENCE')
 		st.write("Negative experience are always a great learning opportunity. Let's figure out a solution that can turn this negative into a positive for the future. Please refer to our consultants at improvements@bestservice.ca. We're more than happy to assist you with mitigating negative experiences!")
