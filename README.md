@@ -1,6 +1,6 @@
-#  PROJECT 3: WEB APIs & NLP
-## *PREDICTING WHICH SUBREDDIT A POST IS FROM (r/pcgaming vs. r/consoles)*
+#  CAPSTONE: SENTIMENT ANALYSIS
 ***BY: KEVIN LUU***
+[WEB APP DEMO](https://share.streamlit.io/l-kevin/sentiment_analysis/main/webapp/main_app.py)
 
 ## EXECUTIVE SUMMARY
 
@@ -14,7 +14,7 @@ I personally would choose PC, but regardless of my preference, the question is t
 
 The goal of the project is to extract posts from two subreddits and undergo Natural Language Processing (NLP) to create & train models that can distinguish which subreddit a post comes from. The two subreddits selected are:
 1. **PC Gaming** (https://www.reddit.com/r/pcgaming/)
-2. **Console Gaming** (https://www.reddit.com/r/consoles/
+2. **Console Gaming** (https://www.reddit.com/r/consoles/)
 
 *Citations:*
 <br><sup>1</sup> - https://www.theglobeandmail.com/life/article-why-the-pandemic-videogame-boom-is-great-for-canada/
@@ -53,7 +53,7 @@ Information was collected from 3 parameter tags:
     - based on top 2 models selected
 
 **Data Cleaning:**
-<br>The feature 'selftext' was the only one that had missing values. This was due to the post being an image-only post without any text. Removing these posts was not the option as the title of the posts still contained useful information. Therefore, all null posts along with all posts that only had "[deleted]" or "[removed]" were filled with a blank space. 
+<br>The feature 'selftext' was the only one that had missing values. This was due to the post being an image-only post without any text. Removing these posts was not the option as the title of the posts still contained useful information. Therefore, all null posts along with all posts that only had "[deleted]" or "[removed]" were filled with a blank space.
 <br>Since the title also contained useful information, a new column called 'text' was created as a combination and replacement of the 'title' and 'selftext' features
 <br>The 'subreddit' feature contained 'pcgaming' or 'console' -- therefore, was handled with label-encoding:
 - pcgaming = 1
@@ -113,8 +113,8 @@ The top models considered for hyperparameter tuning were:
     - DecisionTreeClassifier(max_depth=1)
     - n_estimators = 200
     - learning_rate = 0.5
-    
-    
+
+
 2. **SVC with TF-IDF Vectorization (highest ROC_AUC score + lowest bias)**
 - Training: 0.98373
 - Testing: 0.91156
@@ -127,8 +127,8 @@ The top models considered for hyperparameter tuning were:
     - kernel = sigmoid
     - gamma = 0.1
     - C = 10
-    
-    
+
+
 Some additional tuning was performed and it turns out that there was another SVC model that performed slightly better:
 <br>**Support Vector Classifier with TF-IDF Vectorizer**
 - Training: 0.98373
@@ -143,7 +143,7 @@ Some additional tuning was performed and it turns out that there was another SVC
 
 **Feature importance:**
 <br>While looking at the feature importances of each of the top 2 models, depending on the stop word treatment, different words and combinations of words had an impact on the models performance:
-1. AdaBoost + Count 
+1. AdaBoost + Count
 - many combinations of games + "word" had an impact on the models performance in predicting the PC Gaming subreddit.
     - this was to be expected the model was tuned to only remove the original 'English' stop words instead of the custom one
 
@@ -157,8 +157,8 @@ Some additional tuning was performed and it turns out that there was another SVC
 To achieve the goal of correctly predicting whether a post belongs to subreddit r/pcgaming or r/consoles, one of the two models can be utilized:
 1. **ADABOOST CLASSIFIER with COUNT VECTORIZATION**
     - lowest variance for consistent predictions and best generalization
-    
-    
+
+
 2. **SUPPORT VECTOR CLASSIFER with TF-IDF VECTORIZATION**
     - highest roc_auc for strong separability performance (and lowest bias)
 

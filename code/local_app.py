@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
@@ -9,19 +10,20 @@ from plotly.subplots import make_subplots
 
 from stqdm import stqdm # https://discuss.streamlit.io/t/stqdm-a-tqdm-like-progress-bar-for-streamlit/10097
 
-import matplotlib.pyplot as plt
 import os
 import re
 from bs4 import BeautifulSoup
 from pathlib import Path
 import pickle
+
 import tensorflow
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 
+import torch
 import transformers
-from transformers import pipeline
+from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
 
 ##################################################
 # Text cleaner
@@ -75,7 +77,7 @@ def load_tokenizer():
 def load_cnn():
 	
 	# Download pre-trained neural network if does not exist in folder
-	save_dest = Path('model')
+	save_dest = Path('model/')
 	save_dest.mkdir(exist_ok=True)
 	model_file = Path("model/sentiment_model.hdf5")
 	
@@ -117,12 +119,20 @@ def length(user_input):
 
 @st.cache(allow_output_mutation=True)
 def load_bart():
-	# Download pipeline BART model
+	# Download pipeline BART model	
 	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
-		classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+		model = AutoModelForSequenceClassification.from_pretrained("facebook/bart-large-mnli")
+		tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-mnli")
+		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
-	 
+	# PROBLEM, most streamlit apps crash when utilizing torch (pytorch) dependencies -- gigabytes in size
+		# https://discuss.streamlit.io/t/getting-error-manager-error-checking-streamlit-healthz-get-http-localhost-8501-healthz/8882/2
+		# My delployed app also encounted this issue 
+			# "[manager] The service has encountered an error while checking the health of the Streamlit app"
+	 	# As per https://discuss.streamlit.io/t/unable-to-deploy-the-app-due-to-the-following-error/6594/10
+			# "We currently give 800 MB per app."
+			
 def sentiment_pred(text):
 	# Possible Sentiment Categories
 	# Send the labels and tweets to the classifier pipeline
@@ -135,6 +145,12 @@ def sentiment_pred(text):
 	
 	return label
 
+@st.cache(allow_output_mutation=True)
+def load_upload():
+	df = pd.read_csv(upload)
+	with st.spinner("Loaded. Now cleaning..."):
+		df.text = df.text.apply(cleaner)
+	return df	
 
 
 ########################################################################################################################################################################################################
@@ -199,12 +215,9 @@ elif page == 'In-Depth Analyzer':
 		stqdm.pandas() # initializing progress_apply function
 		
 		try:
-			df = pd.read_csv(upload)
-			with st.spinner("Loaded. Now cleaning..."):
-				df.text = df.text.apply(cleaner)
-				st.success("Cleaned & stored!")
+			df = load_upload()
+			st.success("Cleaned & stored!")
 		except:
-			df = pd.DataFrame()
 			st.write("Your file is not formatted correctly. \n Please ensure that there's a column named 'text' - all lower-cased")
 			
 		sample_size = st.selectbox('Select sample size', ['Please select', 50, 100, 200, 400, 500, 'ALL'])

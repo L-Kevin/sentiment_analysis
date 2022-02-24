@@ -126,7 +126,13 @@ def load_bart():
 		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
-	 
+	# PROBLEM, most streamlit apps crash when utilizing torch (pytorch) dependencies -- gigabytes in size
+		# https://discuss.streamlit.io/t/getting-error-manager-error-checking-streamlit-healthz-get-http-localhost-8501-healthz/8882/2
+		# My delployed app also encounted this issue 
+			# "[manager] The service has encountered an error while checking the health of the Streamlit app"
+	 	# As per https://discuss.streamlit.io/t/unable-to-deploy-the-app-due-to-the-following-error/6594/10
+			# "We currently give 800 MB per app."
+			
 def sentiment_pred(text):
 	# Possible Sentiment Categories
 	# Send the labels and tweets to the classifier pipeline
@@ -139,7 +145,12 @@ def sentiment_pred(text):
 	
 	return label
 
-
+@st.cache(allow_output_mutation=True)
+def load_upload():
+	df = pd.read_csv(upload)
+	with st.spinner("Loaded. Now cleaning..."):
+		df.text = df.text.apply(cleaner)
+	return df	
 
 ########################################################################################################################################################################################################
 # WEB-APP
@@ -203,12 +214,9 @@ elif page == 'In-Depth Analyzer':
 		stqdm.pandas() # initializing progress_apply function
 		
 		try:
-			df = pd.read_csv(upload)
-			with st.spinner("Loaded. Now cleaning..."):
-				df.text = df.text.apply(cleaner)
-				st.success("Cleaned & stored!")
+			df = load_upload()
+			st.success("Cleaned & stored!")
 		except:
-			df = pd.DataFrame()
 			st.write("Your file is not formatted correctly. \n Please ensure that there's a column named 'text' - all lower-cased")
 			
 		sample_size = st.selectbox('Select sample size', ['Please select', 50, 100, 200, 400, 500, 'ALL'])
