@@ -30,7 +30,7 @@ from transformers import pipeline
 
 def cleaner(text):
 	# Remove any HTML tags in-case
-	text = BeautifulSoup(text, features='lxml').get_text()
+	text = BeautifulSoup(text,'lxml').get_text()
 
 	# Type and lower-cased
 	text = str(text)
