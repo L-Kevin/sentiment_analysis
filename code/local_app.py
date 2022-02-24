@@ -135,7 +135,7 @@ def load_bart():
 			# "We currently give 800 MB per app."
 		# https://discuss.streamlit.io/t/app-doesnt-deploy-in-streamlit-sharing-possible-issue-with-deploying-pytorch/8007/4
 			#  Suggests to use the lightest BART model https://huggingface.co/valhalla/distilbart-mnli-12-3
-			# 'distilbart-mnli-12-3'
+			# 'valhalla/distilbart-mnli-12-3'
 			
 def sentiment_pred(text):
 	# Possible Sentiment Categories

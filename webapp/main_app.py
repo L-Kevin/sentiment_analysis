@@ -121,8 +121,8 @@ def length(user_input):
 def load_bart():
 	# Download pipeline BART model	
 	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
-		model = AutoModelForSequenceClassification.from_pretrained("distilbart-mnli-12-3")
-		tokenizer = AutoTokenizer.from_pretrained("distilbart-mnli-12-3")
+		model = AutoModelForSequenceClassification.from_pretrained("valhalla/distilbart-mnli-12-3")
+		tokenizer = AutoTokenizer.from_pretrained("valhalla/distilbart-mnli-12-3")
 		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
@@ -135,7 +135,7 @@ def load_bart():
 			# "We currently give 800 MB per app."
 		# https://discuss.streamlit.io/t/app-doesnt-deploy-in-streamlit-sharing-possible-issue-with-deploying-pytorch/8007/4
 			#  Suggests to use the lightest BART model https://huggingface.co/valhalla/distilbart-mnli-12-3
-			# 'distilbart-mnli-12-3'
+			# 'valhalla/distilbart-mnli-12-3'
 			
 def sentiment_pred(text):
 	# Possible Sentiment Categories
