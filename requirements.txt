@@ -1,0 +1,14 @@
+streamlit
+pandas
+numpy
+matplotlib
+plotly
+time
+stqdm # progress_apply()
+import os
+import re
+bs4
+pathlib
+pickle
+tensorflow
+transformers
