@@ -23,7 +23,7 @@ from tensorflow.keras.models import load_model
 
 import torch
 import transformers
-from transformers import pipeline, TFAutoModelForSequenceClassification, AutoTokenizer
+from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
 
 ##################################################
 # Text cleaner
@@ -121,13 +121,14 @@ def length(user_input):
 def load_bart():
 	# Download pipeline BART model	
 	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
-		model = TFAutoModelForSequenceClassification.from_pretrained("facebook/bart-large-mnli")
-		tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-mnli")
+		model = AutoModelForSequenceClassification.from_pretrained("valhalla/distilbart-mnli-12-3")
+		tokenizer = AutoTokenizer.from_pretrained("valhalla/distilbart-mnli-12-3")
 		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
 	# PROBLEM, most streamlit apps crash when utilizing torch (pytorch) dependencies
 		# Original locally ran model ("facebook/bart-large-mnli") is gigabytes in size
+		# No difference switching AutoModelForSequenceClassification() to TFAutoModelForSequenceClassification()
 		# https://discuss.streamlit.io/t/getting-error-manager-error-checking-streamlit-healthz-get-http-localhost-8501-healthz/8882/2
 		# My delployed app also encounted this issue 
 			# "[manager] The service has encountered an error while checking the health of the Streamlit app"
