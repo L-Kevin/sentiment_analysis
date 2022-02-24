@@ -225,7 +225,7 @@ elif page == 'In-Depth Analyzer':
 		except:
 			st.write("Your file is not formatted correctly. \n Please ensure that there's a column named 'text' - all lower-cased")
 			
-		sample_size = st.selectbox('Select sample size', ['Please select', 50, 100, 200, 400, 500, 'ALL'])
+		sample_size = st.selectbox('Select sample size', ['Please select', 5, 50, 100, 200, 400, 500, 'ALL'])
 		
 		################################################## 
 		# SENTIMENT DISTRIBUTIONS
@@ -249,7 +249,7 @@ elif page == 'In-Depth Analyzer':
 		else:
 			labels = []
 			values = []
-			st.write()
+			st.error('It seems no analysis was achieved with your uploaded file. Try another file.')
 		
 		# 2 Columns
 		pie, reviews = st.columns(2)

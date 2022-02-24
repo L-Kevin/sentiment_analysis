@@ -247,7 +247,7 @@ elif page == 'In-Depth Analyzer':
 		else:
 			labels = []
 			values = []
-			st.write()
+			st.error('It seems no analysis was achieved with your uploaded file. Try another file.')
 		
 		# 2 Columns
 		pie, reviews = st.columns(2)
