@@ -77,7 +77,7 @@ def pre_model():
 
 	save_dest = Path('model')
 	save_dest.mkdir(exist_ok=True)
-	model_file = Path("model/model.hdf5")
+	model_file = Path("model/sentiment_model.hdf5")
 
 	if not model_file.exists():
 		with st.spinner("Downloading model... this may take awhile! \n Don't close or refresh!"):
