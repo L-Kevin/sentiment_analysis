@@ -5,8 +5,8 @@ matplotlib
 plotly
 time
 stqdm # progress_apply()
-import os
-import re
+os
+re
 bs4
 pathlib
 pickle
