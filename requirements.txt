@@ -4,7 +4,6 @@ numpy
 matplotlib
 plotly
 stqdm
-os
 re
 bs4
 pathlib
