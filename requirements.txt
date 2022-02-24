@@ -3,8 +3,7 @@ pandas
 numpy
 matplotlib
 plotly
-time
-stqdm # progress_apply()
+stqdm
 os
 re
 bs4
