@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from plotly.subplots import make_subplots
 
-from time import sleep
 from stqdm import stqdm # https://discuss.streamlit.io/t/stqdm-a-tqdm-like-progress-bar-for-streamlit/10097
 
 import matplotlib.pyplot as plt
@@ -22,7 +21,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 
 import transformers
-from transformers import pipeline
+from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
 
 ##################################################
 # Text cleaner
@@ -119,8 +118,11 @@ def length(user_input):
 @st.cache(allow_output_mutation=True)
 def load_bart():
 	# Download pipeline BART model
+	model = AutoModelForSequenceClassification.from_pretrained("facebook/bart-large-mnli")
+	tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-mnli")
+	
 	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
-		classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
 	 
@@ -293,7 +295,7 @@ elif page == 'In-Depth Analyzer':
 			df['word_count'] = df.text.str.split().apply(len)
 			fig2 = px.histogram(df, x='word_count', color_discrete_sequence=['#b9bfff'])
 			st.plotly_chart(fig2, use_container_width=True)
-			st.write(f"Most reviews have around a __{df.word_count.mode()[0]}__ word count, but the overall average is about of __>{round(df.word_count.mean())}__ words per review.")
+			st.write(f"Most reviews have around a __{df.word_count.mode()[0]}__ word count, but the overall average is about of __{round(df.word_count.mean())}__ words per review.")
 		 
 		 
 			

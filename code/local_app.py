@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from plotly.subplots import make_subplots
 
-from time import sleep
 from stqdm import stqdm # https://discuss.streamlit.io/t/stqdm-a-tqdm-like-progress-bar-for-streamlit/10097
 
 import matplotlib.pyplot as plt
@@ -30,7 +29,7 @@ from transformers import pipeline
 
 def cleaner(text):
 	# Remove any HTML tags in-case
-	text = BeautifulSoup(text, features='lxml').get_text()
+	text = BeautifulSoup(text,'lxml').get_text()
 
 	# Type and lower-cased
 	text = str(text)
@@ -73,7 +72,7 @@ def load_tokenizer():
 
 
 @st.cache(allow_output_mutation=True)
-def pre_model():
+def load_cnn():
 	
 	# Download pre-trained neural network if does not exist in folder
 	save_dest = Path('model')
@@ -116,6 +115,14 @@ def length(user_input):
 # METHOD 2 - Complex Sentiment Analysis -- Collection of reviews
 ##################################################
 
+@st.cache(allow_output_mutation=True)
+def load_bart():
+	# Download pipeline BART model
+	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
+		classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+		
+	return classifier	
+	 
 def sentiment_pred(text):
 	# Possible Sentiment Categories
 	# Send the labels and tweets to the classifier pipeline
@@ -150,7 +157,7 @@ elif page == 'Simple Analyzer':
 	
 	# Load pre-train tokenizer and neural network model (highest accuracy)
 	tokenizer = load_tokenizer()
-	model = pre_model()
+	model = load_cnn()
 	
 	st.header('Simple Analyzer')
 	st.markdown('Enter a review to analyze!')
@@ -170,10 +177,8 @@ elif page == 'Simple Analyzer':
 elif page == 'In-Depth Analyzer':
 	st.title("REVIEW ANALYSIS CONSULTATION SERVICES")
 	
-	# Download pipeline BART model
-	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
-		classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
-		
+	classifier = load_bart()
+
 	st.header('In-Depth Analyzer')
 	st.markdown("Upload your collection of reviews to analyze. _The reviews must be stored into a .csv file under a single column named 'text.'_")
 	
@@ -186,8 +191,6 @@ elif page == 'In-Depth Analyzer':
 	
 	st.markdown("For efficiency purposes, work with 50 reviews at a time.")
 	upload = st.file_uploader('Upload a file')
-	
-
 	
 	if not upload:
 		st.warning('Please upload a .csv file')
@@ -289,7 +292,7 @@ elif page == 'In-Depth Analyzer':
 			df['word_count'] = df.text.str.split().apply(len)
 			fig2 = px.histogram(df, x='word_count', color_discrete_sequence=['#b9bfff'])
 			st.plotly_chart(fig2, use_container_width=True)
-			st.write(f"Most reviews have around a __{df.word_count.mode()[0]}__ word count, but the overall average is about of __>{round(df.word_count.mean())}__ words per review.")
+			st.write(f"Most reviews have around a __{df.word_count.mode()[0]}__ word count, but the overall average is about of __{round(df.word_count.mean())}__ words per review.")
 		 
 		 
 			
