@@ -127,7 +127,7 @@ def load_bart():
 		
 	return classifier	
 	# PROBLEM, most streamlit apps crash when utilizing torch (pytorch) dependencies
-		# ("facebook/bart-large-mnli") is gigabytes in size
+		# Original locally ran model ("facebook/bart-large-mnli") is gigabytes in size
 		# https://discuss.streamlit.io/t/getting-error-manager-error-checking-streamlit-healthz-get-http-localhost-8501-healthz/8882/2
 		# My delployed app also encounted this issue 
 			# "[manager] The service has encountered an error while checking the health of the Streamlit app"
@@ -294,21 +294,22 @@ elif page == 'In-Depth Analyzer':
 		# CHARACTER & COUNT DISTRIBUTIONS
 		##################################################
 		st.header("Character and Word Count Distributions")
+		df3 = df.copy()
 		char, word = st.columns(2)
 		
 		with char:	
 			# Character count distribution	
-			df['char_count'] = df.text.str.len()
-			fig = px.histogram(df, x='char_count', color_discrete_sequence=['#ffb9bf'])
+			df3['char_count'] = df3.text.str.len()
+			fig = px.histogram(df3, x='char_count', color_discrete_sequence=['#ffb9bf'])
 			st.plotly_chart(fig, use_container_width=True)
-			st.write(f"Most reviews have around a __{df.char_count.mode()[0]}__ character count, but the overall average is about __{round(df.char_count.mean())}__ characters per review.")
+			st.write(f"Most reviews have around a __{df3.char_count.mode()[0]}__ character count, but the overall average is about __{round(df3.char_count.mean())}__ characters per review.")
 		
 		with word:
 			# Word count distribution
-			df['word_count'] = df.text.str.split().apply(len)
-			fig2 = px.histogram(df, x='word_count', color_discrete_sequence=['#b9bfff'])
+			df3['word_count'] = df3.text.str.split().apply(len)
+			fig2 = px.histogram(df3, x='word_count', color_discrete_sequence=['#b9bfff'])
 			st.plotly_chart(fig2, use_container_width=True)
-			st.write(f"Most reviews have around a __{df.word_count.mode()[0]}__ word count, but the overall average is about of __{round(df.word_count.mean())}__ words per review.")
+			st.write(f"Most reviews have around a __{df3.word_count.mode()[0]}__ word count, but the overall average is about of __{round(df3.word_count.mean())}__ words per review.")
 		 
 		 
 			

@@ -43,8 +43,12 @@ Can it be generalized?
 - Modeling Training & Implementation
     - 3 models
       - Logistic Regression (LogReg)
+        - TF-IDF Vectorizer
       - Convolutional Neural Network (CNN)
       - Bidirectional Autoregressive Tranformer (BART)
+        - Pre-trained models:
+          - [FaceBook's bart-large-mnli](https://huggingface.co/facebook/bart-large-mnli) trained locally
+          - [Valhalla's distilbart-mnli-12-3](https://huggingface.co/valhalla/distilbart-mnli-12-3) for server deployment
 
 **Data Cleaning:**
 <br>The feature 'selftext' was the only one that had missing values. This was due to the post being an image-only post without any text. Removing these posts was not the option as the title of the posts still contained useful information. Therefore, all null posts along with all posts that only had "[deleted]" or "[removed]" were filled with a blank space.
