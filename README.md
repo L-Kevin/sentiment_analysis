@@ -1,20 +1,17 @@
 #  CAPSTONE: SENTIMENT ANALYSIS
 ***BY: KEVIN LUU***
+
 [WEB APP DEMO](https://share.streamlit.io/l-kevin/sentiment_analysis/main/webapp/main_app.py)
 
 ## EXECUTIVE SUMMARY
 
 ### PROBLEM STATEMENT
-Throughout the pandemic, the video gaming industry experienced a boom and thrived. Due to the restrictions, people are at bored at home and have a lot more spare time with nothing to do. This is where gaming become a way to pass time. As for others, gaming helped individuals with avoiding loneliness, allowing them to remain connected with friends.<sup>1</sup>
+Dread calling into customer service to fix your issue....
+What are these big corps doing?
 
-Looking at the numbers: Microsoft's Game Pass (a Netflix for gaming) hit 10-million subscribers; Nintendo's Switch console sales went up by 24%; Twitch (a live-streaming platform full of gamers) had an increase of 101% in hours of live-streams watch hitting 1.6 billions hours of content watched per month; and Facebook Gaming had the largest increase of 238% in growth.<sup>2,3</sup>
+Are there common trends?
+Can it be generalized?
 
-The question that always comes up within the gaming world is: **PC or Console?** Which is better?
-I personally would choose PC, but regardless of my preference, the question is the source for which 2 subreddits were selected for this project.
-
-The goal of the project is to extract posts from two subreddits and undergo Natural Language Processing (NLP) to create & train models that can distinguish which subreddit a post comes from. The two subreddits selected are:
-1. **PC Gaming** (https://www.reddit.com/r/pcgaming/)
-2. **Console Gaming** (https://www.reddit.com/r/consoles/)
 
 *Citations:*
 <br><sup>1</sup> - https://www.theglobeandmail.com/life/article-why-the-pandemic-videogame-boom-is-great-for-canada/
@@ -23,34 +20,31 @@ The goal of the project is to extract posts from two subreddits and undergo Natu
 
 
 ### DATA
-Due to difficulties of bypassing the 999 post limit with the base [Pushshift.io API](https://github.com/pushshift/api), the data was collected through the usage of [Pushshift Multithreading API Wrapper (PMAW)](https://pypi.org/project/pmaw/0.0.2/). Setting the limit to 10,000 posts, I was able to collect:
-- 10000 submissions from r/pcgaming
-- 5461 submissions from r/consoles
-
-Information was collected from 3 parameter tags:
-- 'subreddit' -- the name of the subreddit the post comes from
-- 'title' -- the title of the post
-- 'selftext' -- the text contents of the post
-
+- Sourced from [Stanford University](http://ai.stanford.edu/~amaas/data/sentiment/) -- collected of IMDB reviews
+- Training dataset consists of 25000 labeled reviews
+  - 12500 negative reviews (<= 4 ratings)
+  - 12500 positive reviews ()>=7 ratings )
+- Unsupervised (unlabeled) dataset of 50000 reviews
+  - inclusive of between 4-7 ratings
+- Originally in the form of 75000 .txt files:
+  - compiled into MS Excel Queries --> transformed & exported as UTF-8 .csv file
 
 ### METHODOLOGY
-- Data Cleaning
-    - label encoding 'subreddit' feature
-    - replaced null/\[deleted\]/\[removed\] posts
-    - combined 'title' and 'selftext' into one column: 'text'
+- Data Wrangling
+    - data manipulation to comma-separated-values
+    - review text cleaning
+      - (lowercase, removal of URL elements, retained letters only)
 - Experimental Data Analysis (EDA)
-    - additional text cleaning
-        - (lowercase, removal of URL elements, retained letters only)
-    - NLP vectorization to observe top 20 frequent words
-        - Count Vectorization
-        - TF-IDF Vectorization
+    - NLP count vectorization for most frequent words per sentiment
+      - horizontal bar chart
+      - word cloud
+    - character and word count distributions
+    - word2vec - top 30 similar words to bad/good
 - Modeling Training & Implementation
-    - custom stop words list created for tuning
-    - initial observation of Logistic Regression
-    - model selection based on cross-validation scores of various models
-    - top 2 models chosen after hypertuning selected models
-- Feature Importances
-    - based on top 2 models selected
+    - 3 models
+      - Logistic Regression (LogReg)
+      - Convolutional Neural Network (CNN)
+      - Bidirectional Autoregressive Tranformer (BART)
 
 **Data Cleaning:**
 <br>The feature 'selftext' was the only one that had missing values. This was due to the post being an image-only post without any text. Removing these posts was not the option as the title of the posts still contained useful information. Therefore, all null posts along with all posts that only had "[deleted]" or "[removed]" were filled with a blank space.
