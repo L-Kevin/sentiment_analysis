@@ -154,7 +154,7 @@ def predict(user_input):
 		st.markdown(image, unsafe_allow_html=True)
 		
 		st.write('Conclusion: __POSITIVE EXPERIENCE__')
-		st.write("This client had an overall __positive__ experience. Continue to deliver similar products and/or solutions that align with the positives in this review. Try out our in-depth analyzer to further understand your client experiences. Feel free to reach out to us at improvements@bestservice.ca for 1-on-1 insights.")
+		st.write("This is an overall __positive__ experience. Continue to deliver similar products and/or solutions that align with the positives in this review. Try out our in-depth analyzer to further understand your client experiences. Feel free to reach out to us at improvements@bestservice.ca for 1-on-1 insights.")
 	
 	elif pred > 0.3:
 		image = """<img src="https://cdn.shopify.com/s/files/1/1061/1924/products/Neutral_Face_Emoji_large.png?v=1571606037"

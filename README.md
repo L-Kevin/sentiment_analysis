@@ -86,20 +86,11 @@ Can it be generalized?
 - INSERT TABLE RESULT SCREENSHOTS HERE
 
 **Model Parameters:**
-- 
+-
 
 ### CONCLUSION
-To achieve the goal of correctly predicting whether a post belongs to subreddit r/pcgaming or r/consoles, one of the two models can be utilized:
-1. **ADABOOST CLASSIFIER with COUNT VECTORIZATION**
-    - lowest variance for consistent predictions and best generalization
 
-
-2. **SUPPORT VECTOR CLASSIFER with TF-IDF VECTORIZATION**
-    - highest roc_auc for strong separability performance (and lowest bias)
 
 ### RECOMENDATIONS
-1. Include lemmatization/stemming in the tuning process
-    - Potentially better scores may exist and the feature importances could narrow down
-2. Implement image processing due to many posts being image-only
-3. Re-conduct the analysis when the r/consoles community has expanded to have a minimum of 10000 posts
-    - Due to imblanced samples from each subreddit (more r/pcgaming vs. r/consoles)
+
+### NEXT STEPS
