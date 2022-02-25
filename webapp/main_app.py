@@ -189,8 +189,8 @@ def length(user_input):
 def load_bart():
 	# Download pipeline BART model	
 	with st.spinner("Preparing analyzer... this may take awhile! \n Don't close or refresh!"):
-		model = AutoModelForSequenceClassification.from_pretrained("facebook/bart-large-mnli")
-		tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-mnli")
+		model = AutoModelForSequenceClassification.from_pretrained("valhalla/distilbart-mnli-12-3")
+		tokenizer = AutoTokenizer.from_pretrained("valhalla/distilbart-mnli-12-3")
 		classifier = pipeline("zero-shot-classification", model=model, tokenizer=tokenizer)
 		
 	return classifier	
