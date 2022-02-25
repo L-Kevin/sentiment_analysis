@@ -140,7 +140,7 @@ def predict(user_input):
 		cells=dict(values=[results_df.TEXT, results_df['TEXT ANALYZED'], results_df['POSITIVE %'], results_df['NEGATIVE %']],
 		       fill_color = fill_color,
 		       font=dict(color='black', family="monospace", size=14),
-		       align='left'))
+		       align=['left', 'left', 'center', 'center']))
 		])
 	table.update_layout(width=1500)
 	st.plotly_chart(table, use_container_width=True)
